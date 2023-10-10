@@ -1,0 +1,57 @@
+
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Identificador</th> 
+                <th>Código</th>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Existencias</th>
+                <th>Agregar al carrito</th>
+            </tr>
+        </thead>
+        <tbody id="productTableBody">
+            {{#each renderedProducts}}
+                <tr>
+                    <td>{{_id}}</td>
+                    <td>{{code}}</td>
+                    <td>{{title}}</td>
+                    <td>{{description}}</td>
+                    <th>{{category}}</th>
+                    <td>{{price}}</td>                    
+                    <td>{{stock}}</td>
+                    <td>
+                        <button class="addToCartButton" data-productid="{{_id}}">Agregar al carrito</button>
+                    </td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const addToCartButtons = document.querySelectorAll(".addToCartButton");
+            addToCartButtons.forEach(function (button) {
+                button.addEventListener("click", function () {
+                    const productId = button.getAttribute("data-productid");
+                    fetch(`/api/carts/product/${productId}`, {
+                        method: "POST",
+                    })
+                    .then(function (response) {
+                        if (response.ok) {
+                            console.log ('carrito creado')
+                        } else {
+                            console.log ('*** error al crear el carrito')
+                        } 
+                    })
+                    .catch(function (error) {
+                        console.error("Error al realizar la solicitud POST:", error);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
